@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import axios from 'axios';
 import {parseString} from 'xml2js';
-import Paymentrow from "./paymentrow/paymentrow";
+import PaymentRow from "./paymentRow";
+import PaymentHeader from "./paymentHeader";
 
 export type PaymentRowProps = {
     SerNr: string;
@@ -46,7 +47,6 @@ const Payments = () => {
 
         axios.get(paymentURL, axiosParams)
             .then((response) => {
-                // Convert XML to JSON
                 parseString(response.data, (err, result) => {
                     if (err) {
                         console.error('Failed to parse XML to JSON: ', err);
@@ -78,7 +78,10 @@ const Payments = () => {
                         Nolasīt rēķinus
                     </Text>
                 </Pressable>
+
+                <PaymentHeader/>
             </View>
+
 
             {paymentEntry.map((element) => {
 
@@ -86,7 +89,7 @@ const Payments = () => {
                 const serNr = element.SerNr[0];
 
                 return (
-                    <Paymentrow
+                    <PaymentRow
                         key={element.SerNr[0]}
                         ClientContact={name}
                         SerNr={serNr}/>

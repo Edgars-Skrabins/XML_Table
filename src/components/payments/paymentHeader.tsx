@@ -1,20 +1,19 @@
 import React from 'react';
 import {StyleSheet, Text, View} from "react-native";
-import {PaymentRowProps} from "../payments";
 
-const Paymentrow = ({SerNr, ClientContact}: PaymentRowProps) => {
+const PaymentHeader = () => {
     return (
-        <View style={styles.table}>
+        <View style={styles.rowContainer}>
             <View style={styles.row}>
                 <View style={styles.cell}>
                     <Text style={styles.name}>
-                        {ClientContact}
+                        Client Name
                     </Text>
                 </View>
 
                 <View style={styles.cell}>
                     <Text style={styles.serNr}>
-                        {SerNr}
+                        Ser Nr.
                     </Text>
                 </View>
             </View>
@@ -22,42 +21,46 @@ const Paymentrow = ({SerNr, ClientContact}: PaymentRowProps) => {
     );
 };
 
-export default Paymentrow;
+export default PaymentHeader;
 
 const styles = StyleSheet.create({
-    table: {
-        borderWidth: 1,
+    rowContainer: {
         borderColor: "black",
-        marginBottom: 5,
-        marginTop: 2,
+        maxWidth:'100vw',
+        padding: 4,
     },
     row: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#e3e3e3",
+        backgroundColor: "#a2a2a2",
+        borderWidth: 1,
     },
     cell: {
         flex: 1,
-        padding: 10,
         borderWidth: .5,
         width: 500,
-        height: 50,
+        height: 40,
         textAlign: "center",
         fontSize: 25,
         color: "black",
         borderColor: "black",
+
+        paddingLeft: 5,
+
+        alignItems:'center',
+        justifyContent:'center'
     },
 
     name: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         justifyContent: 'center',
         alignItems: 'center',
     },
 
     serNr: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         justifyContent: 'center',
         alignItems: 'center',
