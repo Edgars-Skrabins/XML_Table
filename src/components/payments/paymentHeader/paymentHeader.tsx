@@ -1,7 +1,7 @@
-import React from 'react';
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View,Dimensions} from "react-native";
 
 const PaymentHeader = () => {
+
     return (
         <View style={styles.rowContainer}>
             <View style={styles.row}>
@@ -23,10 +23,13 @@ const PaymentHeader = () => {
 
 export default PaymentHeader;
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
+
     rowContainer: {
         borderColor: "black",
-        maxWidth:'100vw',
+        maxWidth: width,
         padding: 4,
     },
     row: {

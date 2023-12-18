@@ -1,60 +1,46 @@
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import axios from 'axios';
+import axiosConfig from '../axiosConfig/axiosConfig';
 import {parseString} from 'xml2js';
-import PaymentRow from "./paymentRow";
-import PaymentHeader from "./paymentHeader";
+import PaymentRow from "./paymentRow/paymentRow";
+import PaymentHeader from "./paymentHeader/paymentHeader";
 
-export type PaymentRowProps = {
-    SerNr: string;
-    ClientContact: string;
-}
+type PaymentData = {
+    data: {
+        $: {
+            register: string;
+            sequence: string;
+            systemversion: string;
+        };
+        IVVc: PaymentEntry[];
+    };
+};
 
+type PaymentEntry = {
+    SerNr: string[];
+    ClientContact: string[];
+};
+
+const nameWhenClientNameNotFound = 'Nav';
+
+const paymentURL = '/IVVc';
+const currentUser = 'TEST';
+const currentPassword = '123123123';
 const Payments = () => {
 
-    type PaymentData = {
-        data: {
-            $: {
-                register: string;
-                sequence: string;
-                systemversion: string;
-            };
-            IVVc: PaymentEntry[];
-        };
-    };
-
-    type PaymentEntry = {
-        SerNr: string[];
-        ClientContact: string[];
-    };
-
-    const [paymentsResponse, setPaymentsResponse] = useState<PaymentData>();
-    const [paymentEntry, setPaymentEntry] = useState<PaymentEntry[]>([]);
-
-    const nameWhenClientNameNotFound = 'NAV';
-
-    const paymentURL = 'https://lv001.excellent.lv:7002/api/1/IVVc';
-    const currentUser = 'TEST';
-    const currentPassword = '123123123';
+    const [paymentsData, setPaymentsData] = useState<PaymentData>();
 
     const getPayments = () => {
-        const axiosParams = {
-            auth: {
-                username: currentUser,
-                password: currentPassword,
-            },
-        };
-
-        axios.get(paymentURL, axiosParams)
-            .then((response) => {
-                parseString(response.data, (err, result) => {
+        axiosConfig.get(paymentURL)
+            .then(({data}) => {
+                parseString(data, (err, result) => {
                     if (err) {
                         console.error('Failed to parse XML to JSON: ', err);
                     } else {
                         const paymentsResponse: PaymentData = result;
+                        setPaymentsData(paymentsResponse);
+
                         console.log('Successfully parsed XML to JSON: ');
-                        setPaymentsResponse(paymentsResponse);
-                        setPaymentEntry(paymentsResponse.data.IVVc)
                     }
                 });
             })
@@ -83,16 +69,13 @@ const Payments = () => {
             </View>
 
 
-            {paymentEntry.map((element) => {
-
-                const name = element.ClientContact[0] === '' ? nameWhenClientNameNotFound : element.ClientContact[0];
-                const serNr = element.SerNr[0];
+            {paymentsData?.data.IVVc.map(({ClientContact, SerNr}) => {
 
                 return (
                     <PaymentRow
-                        key={element.SerNr[0]}
-                        ClientContact={name}
-                        SerNr={serNr}/>
+                        key={SerNr[0]}
+                        ClientContact={ClientContact[0] || nameWhenClientNameNotFound}
+                        SerNr={SerNr[0] || nameWhenClientNameNotFound}/>
                 );
 
             })}

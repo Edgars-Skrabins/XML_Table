@@ -1,6 +1,9 @@
-import React from 'react';
-import {StyleSheet, Text, View} from "react-native";
-import {PaymentRowProps} from "./payments";
+import {StyleSheet, Text, View, Dimensions} from "react-native";
+
+export type PaymentRowProps = {
+    SerNr: string;
+    ClientContact: string;
+}
 
 const PaymentRow = ({SerNr, ClientContact}: PaymentRowProps) => {
     return (
@@ -24,10 +27,12 @@ const PaymentRow = ({SerNr, ClientContact}: PaymentRowProps) => {
 
 export default PaymentRow;
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
     rowContainer: {
         borderColor: "black",
-        maxWidth:'100vw',
+        maxWidth:width,
         padding: 4,
     },
     row: {
