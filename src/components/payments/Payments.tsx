@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import axiosConfig from '../axiosConfig/axiosConfig';
+import axiosConfig from '../axiosConfig/AxiosConfig';
 import {parseString} from 'xml2js';
-import PaymentRow from "./paymentRow/paymentRow";
-import PaymentHeader from "./paymentHeader/paymentHeader";
+import PaymentRow from "./paymentRow/PaymentRow";
+import PaymentHeader from "./paymentHeader/PaymentHeader";
 
 type PaymentData = {
     data: {

@@ -1,5 +1,5 @@
 import { StyleSheet,View } from 'react-native';
-import Payments from "./src/components/payments/payments";
+import Payments from "./src/components/payments/Payments";
 
 const App = () => {
   return (
