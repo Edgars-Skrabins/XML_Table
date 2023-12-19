@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import axiosConfig from '../axiosConfig/AxiosConfig';
 import {parseString} from 'xml2js';
-import PaymentRow from "./paymentRow/PaymentRow";
-import PaymentHeader from "./paymentHeader/PaymentHeader";
+import PaymentRow from "../paymentRow/PaymentRow";
+import PaymentHeader from "../paymentHeader/PaymentHeader";
+import {api} from "../../../utils/api/api";
 
 type PaymentData = {
     data: {
@@ -21,40 +21,35 @@ type PaymentEntry = {
     ClientContact: string[];
 };
 
-const nameWhenClientNameNotFound = 'Nav';
-
 const paymentURL = '/IVVc';
-const currentUser = 'TEST';
-const currentPassword = '123123123';
 const Payments = () => {
 
-    const [paymentsData, setPaymentsData] = useState<PaymentData>();
+    const [loading, setLoading] = useState(false);
+    const [paymentsEntries, setPaymentsEntries] = useState<PaymentEntry[]>([]);
 
-    const getPayments = () => {
-        axiosConfig.get(paymentURL)
-            .then(({data}) => {
-                parseString(data, (err, result) => {
-                    if (err) {
-                        console.error('Failed to parse XML to JSON: ', err);
-                    } else {
-                        const paymentsResponse: PaymentData = result;
-                        setPaymentsData(paymentsResponse);
+    const getPayments = async () => {
 
-                        console.log('Successfully parsed XML to JSON: ');
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error(`Failed to get payment data with User:${currentUser} and Password:${currentPassword} ` + error);
-            });
+        setLoading(true);
+
+        const {data} = await api.get(paymentURL);
+
+        parseString(data, (err, result: PaymentData) => {
+            if (err) {
+                console.error('Failed to parse XML to JSON: ', err);
+                return;
+            }
+            setPaymentsEntries(result.data.IVVc);
+            console.log('Successfully parsed XML to JSON: ', result);
+
+            setLoading(false);
+
+        });
     };
 
     return (
         <View style={styles.container}>
-
             <View style={styles.header}>
                 <Pressable
-
                     onPress={getPayments}
                     style={styles.readPaymentsBtn}
                 >
@@ -66,22 +61,19 @@ const Payments = () => {
                 </Pressable>
 
                 <PaymentHeader/>
+
             </View>
 
-
-            {paymentsData?.data.IVVc.map(({ClientContact, SerNr}) => {
-
+            {loading && <Text> loading... </Text>}
+            {paymentsEntries.map(({ClientContact, SerNr}) => {
                 return (
                     <PaymentRow
                         key={SerNr[0]}
-                        ClientContact={ClientContact[0] || nameWhenClientNameNotFound}
-                        SerNr={SerNr[0] || nameWhenClientNameNotFound}/>
+                        ClientContact={ClientContact[0] || '-'}
+                        SerNr={SerNr[0] || '-'}/>
                 );
-
             })}
-
         </View>
-
     );
 };
 

@@ -1,5 +1,5 @@
 import { StyleSheet,View } from 'react-native';
-import Payments from "./src/components/payments/Payments";
+import Payments from "./src/components/payments/payments/Payments";
 
 const App = () => {
   return (
@@ -10,7 +10,6 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#626262',
